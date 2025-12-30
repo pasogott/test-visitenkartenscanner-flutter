@@ -292,16 +292,20 @@ class SettingsScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 16),
-              TextField(
-                maxLines: 6,
-                decoration: const InputDecoration(
-                  hintText: 'Extract the following information...',
-                  border: OutlineInputBorder(),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 150),
+                child: const TextField(
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Extract the following information...',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
             ],
           ),
         ),
+        actionsOverflowButtonSpacing: 8,
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -312,7 +316,7 @@ class SettingsScreen extends StatelessWidget {
               // TODO: Reset to default
               Navigator.pop(context);
             },
-            child: const Text('Reset to Default'),
+            child: const Text('Reset'),
           ),
           FilledButton(
             onPressed: () {
