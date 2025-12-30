@@ -203,4 +203,7 @@ xcuserdata/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+# Claude Code local settings
+.claude/
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,xcode,flutter
