@@ -44,6 +44,24 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
 
   Future<void> _initializeCamera() async {
     final scanProvider = context.read<ScanProvider>();
+
+    // Try to initialize camera first (detects simulator)
+    try {
+      final useFrontCamera = scanProvider.currentStep == ScanStep.selfie;
+      await _cameraService.initialize(frontCamera: useFrontCamera);
+
+      if (!mounted) return;
+
+      // If simulator, skip permission check
+      if (_cameraService.isSimulator) {
+        setState(() => _hasPermission = true);
+        return;
+      }
+    } catch (e) {
+      // Continue to permission check
+    }
+
+    // Real device - request permission
     final status = await Permission.camera.request();
 
     if (!mounted) return;
@@ -51,13 +69,15 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
     if (status.isGranted) {
       setState(() => _hasPermission = true);
 
-      try {
-        final useFrontCamera = scanProvider.currentStep == ScanStep.selfie;
-        await _cameraService.initialize(frontCamera: useFrontCamera);
-        if (mounted) setState(() {});
-      } catch (e) {
-        if (mounted) {
-          setState(() => _errorMessage = 'Kamera konnte nicht initialisiert werden');
+      if (!_cameraService.isInitialized) {
+        try {
+          final useFrontCamera = scanProvider.currentStep == ScanStep.selfie;
+          await _cameraService.initialize(frontCamera: useFrontCamera);
+          if (mounted) setState(() {});
+        } catch (e) {
+          if (mounted) {
+            setState(() => _errorMessage = 'Kamera konnte nicht initialisiert werden');
+          }
         }
       }
     } else {
@@ -154,6 +174,10 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
       );
     }
 
+    if (_cameraService.isSimulator) {
+      return _buildSimulatorView();
+    }
+
     return _buildCameraView();
   }
 
@@ -197,6 +221,55 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSimulatorView() {
+    return Consumer<ScanProvider>(
+      builder: (context, scanProvider, child) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            // Mock camera background
+            Container(
+              color: const Color(0xFF1a1a1a),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      scanProvider.currentStep == ScanStep.selfie
+                          ? Icons.person
+                          : Icons.credit_card,
+                      size: 120,
+                      color: Colors.white24,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Simulator Mode',
+                      style: TextStyle(
+                        color: Colors.white38,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Tap capture to create mock image',
+                      style: TextStyle(
+                        color: Colors.white24,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            _buildOverlay(scanProvider),
+            _buildTopBar(scanProvider),
+            _buildBottomControls(scanProvider),
+          ],
+        );
+      },
     );
   }
 
