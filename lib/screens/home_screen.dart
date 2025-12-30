@@ -5,6 +5,7 @@ import '../providers/cards_provider.dart';
 import '../models/business_card.dart';
 import 'scan_screen.dart';
 import 'card_detail_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,6 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => _openSettings(context),
+            tooltip: 'Settings',
+          ),
+        ],
       ),
       body: Consumer<CardsProvider>(
         builder: (context, cardsProvider, child) {
@@ -188,6 +196,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openCardDetail(BusinessCard card) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => CardDetailScreen(card: card)),
+    );
+  }
+
+  void _openSettings(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const SettingsScreen()),
     );
   }
 }
