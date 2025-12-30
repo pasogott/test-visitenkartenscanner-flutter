@@ -1,0 +1,75 @@
+name: Feature Request
+description: Propose a new feature for the Business Card Scanner
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to propose a new feature!
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: Describe the feature from the user's perspective
+      placeholder: |
+        As a [type of user],
+        I want [some goal],
+        so that [some reason].
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: List the conditions that must be met for this feature to be complete
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-tasks
+    attributes:
+      label: Technical Tasks
+      description: Break down the implementation into specific tasks
+      placeholder: |
+        - Create `lib/services/new_service.dart`
+        - Update `lib/screens/home_screen.dart`
+        - Add tests in `test/`
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - High (MVP)
+        - Medium
+        - Low
+        - Future
+    validations:
+      required: true
+
+  - type: input
+    id: story-points
+    attributes:
+      label: Story Points
+      description: Estimated complexity (1, 2, 3, 5, 8, 13)
+      placeholder: "5"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or screenshots
+    validations:
+      required: false
